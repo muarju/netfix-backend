@@ -1,1 +1,19 @@
-[{"Title":"The Lord of the Rings: The Fellowship of the Ring","Year":"2001","Type":"movie","Poster":"http://localhost:3001/img/wcz3wa64kskcfco0.jpg","imdbID":"wcz3wa64kskcfco0","createdAt":"2021-08-20T12:43:02.495Z","updatedAt":"2021-08-20T13:19:07.578Z"},{"Title":"The Lord of the Rings: The Return of the King","Year":"2003","Type":"movie","Poster":"https://m.media-amazon.com/images/M/MV5BNzA5ZDNlZWMtM2NhNS00NDJjLTk4NDItYTRmY2EwMWZlMTY3XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg","imdbID":"wcz3wfm0kskcqzwi","createdAt":"2021-08-20T12:52:05.825Z"}]
+[
+    {
+        "Title": "The Lord of the Rings: The Fellowship of the Ring",
+        "Year": "2001",
+        "Type": "movie",
+        "Poster": "http://localhost:3001/img/wcz3wa64kskcfco0.jpg",
+        "imdbID": "wcz3wa64kskcfco0",
+        "createdAt": "2021-08-20T12:43:02.495Z",
+        "updatedAt": "2021-08-20T13:19:07.578Z"
+    },
+    {
+        "Title": "The Lord of the Rings: The Return of the King",
+        "Year": "2003",
+        "Type": "movie",
+        "Poster": "https://m.media-amazon.com/images/M/MV5BNzA5ZDNlZWMtM2NhNS00NDJjLTk4NDItYTRmY2EwMWZlMTY3XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg",
+        "imdbID": "wcz3wfm0kskcqzwi",
+        "createdAt": "2021-08-20T12:52:05.825Z"
+    }
+]

@@ -1,5 +1,5 @@
 import express from "express"
-import { getMedias,writeMedia,savePicture,mediaJSONPath } from "../lib/utilities.js"
+import { getMedias,writeMedia,getReviews,writeReview,savePicture,mediaJSONPath } from "../lib/utilities.js"
 import createHttpError from 'http-errors'
 import { validationResult } from "express-validator";
 import {mediaValidations} from './validation.js'
@@ -126,6 +126,31 @@ mediaRouter.delete("/:id",async (request,response,next)=>{
       }catch(error){
           next(error)
       }
+})
+
+//reviews related methods
+// GET ALL Reviews for specific Media
+mediaRouter.get("/:elementId/reviews", async(request,response,next)=>{
+    try {
+        const reviews = await getReviews()
+        const filteredReviews = reviews.filter(r => r.elementId === request.params.elementId)
+        response.status(200).send(filteredReviews)
+
+    } catch (error) {
+        next(error)
+    }
+})
+
+mediaRouter.post("/:elementId/reviews", async(request,response,next)=>{
+    try {
+        const reviews = await getReviews()
+        const newReview = {...request.body,createdAt: new Date(),id: uniqid(),elementId: request.params.elementId}
+        reviews.push(newReview)
+        await writeReview(reviews)
+        response.status(200).send(newReview)
+    } catch (error) {
+        next(error)
+    }
 })
 
 export default mediaRouter
