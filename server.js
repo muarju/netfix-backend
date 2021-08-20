@@ -3,7 +3,7 @@ import listEndpoints from 'express-list-endpoints'
 import cors from 'cors'
 import mediaRouter from './src/media/index.js'
 import {notFoundErrorHandler,forbiddenErrorHandler, badRequestErrorHandler,serverErrorHandler} from './errorHandler.js'
-
+import {publicFolderPath} from './src/lib/utilities.js'
 
 const server = express()
 const port = process.env.PORT
@@ -23,6 +23,7 @@ const setCorsConfig = {
 
 //Global Middleware
 server.use(cors(setCorsConfig))
+server.use(express.static(publicFolderPath))
 server.use(express.json())
 
 // *************** ROUTES *****************

@@ -4,6 +4,7 @@ import { dirname,join } from 'path'
 import { cwd } from "process";
 
 export const publicImgFolderPath = join(cwd(), "public/img/")
+export const publicFolderPath = join(cwd(), "public/")
 const {readJSON, writeJSON, writeFile}=fs
 export const mediaJSONPath=join(dirname(fileURLToPath(import.meta.url)),"../data/media.json")
 
