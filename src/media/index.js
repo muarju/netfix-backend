@@ -1,5 +1,5 @@
 import express from "express"
-import { getMedias,writeMedia,getReviews,writeReview,savePicture,mediaJSONPath } from "../lib/utilities.js"
+import { getMedias,writeMedia,getReviews,writeReview,savePicture,mediaJSONPath,cloudinaryStorageMedia } from "../lib/utilities.js"
 import createHttpError from 'http-errors'
 import { validationResult } from "express-validator";
 import {mediaValidations} from './validation.js'
@@ -13,6 +13,19 @@ const mediaRouter = express.Router() //authors router
 
 mediaRouter.get("/", async(request,response,next)=>{
     try{
+        if (request.query.search) {
+            const medias = await getMedias()
+            const filteredMedias = medias.filter(m =>           
+                     m.Title.toLowerCase().includes(request.query.search.toLowerCase())
+             )
+            if (filteredMedias.length === 0) {
+                response.status(200).send("No Result found")
+            } else {
+                response.status(200).send(filteredMedias)
+            }
+            return
+        }
+
         const medias= await getMedias()
         response.status(200).send(medias)
       }catch(error){
@@ -83,15 +96,9 @@ mediaRouter.put("/:id",mediaValidations, async(request,response,next)=>{
       }
 })
 
-mediaRouter.put("/:id/poster",multer().single("Poster"), async(request,response,next)=>{
+mediaRouter.put("/:id/poster",multer({ storage: cloudinaryStorageMedia }).single("Poster")
+, async(request,response,next)=>{
     try{
-        const { originalname, buffer } = request.file;
-        const extension = extname(originalname);
-        const fileName = `${request.params.id}${extension}`;
-        await savePicture(fileName,buffer)
-        const link = `http://localhost:3001/img/${fileName}`;
-        request.file = link;
-
         const fileAsBuffer = fs.readFileSync(mediaJSONPath);
         const fileAsString = fileAsBuffer.toString();
         let fileAsJSONArray = JSON.parse(fileAsString);
@@ -102,7 +109,7 @@ mediaRouter.put("/:id/poster",multer().single("Poster"), async(request,response,
           response.status(404).send({ message: `Media with ${request.params.id} is not found!` });
         }
         const previousMediaData = fileAsJSONArray[mediaIndex];
-        const changedMedia = {... previousMediaData,Poster: request.file,updatedAt: new Date(),imdbID: request.params.id};
+        const changedMedia = {... previousMediaData,Poster: request.file.path,updatedAt: new Date(),imdbID: request.params.id};
         fileAsJSONArray[mediaIndex] = changedMedia;
         fs.writeFileSync(mediaJSONPath, JSON.stringify(fileAsJSONArray));
         response.send(changedMedia);
