@@ -153,4 +153,15 @@ mediaRouter.post("/:elementId/reviews", async(request,response,next)=>{
     }
 })
 
+mediaRouter.delete("/review/:id", async(request,response,next)=>{
+    try {
+        const reviews = await getReviews()
+        const filteredReviews = reviews.filter(r => r.id !== request.params.id)
+        await writeReview(filteredReviews)
+        response.status(204).send({ deleted: true })
+    } catch (error) {
+        next(error)
+    }
+})
+
 export default mediaRouter
