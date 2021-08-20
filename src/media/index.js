@@ -1,6 +1,9 @@
 import express from "express"
 import { getMedias,writeMedia } from "../lib/utilities.js"
 import createHttpError from 'http-errors'
+import { validationResult } from "express-validator";
+import {mediaValidations} from './validation.js'
+import uniqid from 'uniqid'
 
 
 const mediaRouter = express.Router() //authors router
@@ -30,19 +33,19 @@ mediaRouter.get("/:imdbID",async (request,response,next)=>{
       }
 
 })
-mediaRouter.post("/",async (request,response,next)=>{
+mediaRouter.post("/",mediaValidations, async (request,response,next)=>{
     try{
-        const errorList=validationResult(request)
+        const errorList= validationResult(request)
         console.log(errorList)
         if(!errorList.isEmpty()){
             next(createHttpError(400,{errorList}))
             
         }else{
-            const authors= await getAuthors()
-            const newAuthor = {... request.body, id:uniqid(), createdAt: new Date()}
-            authors.push(newAuthor)
-            await writeAuthor(authors)
-            response.status(201).send({id:newAuthor.id})
+            const medias= await getMedias()
+            const newMedia = {... request.body, imdbID:uniqid(), createdAt: new Date()}
+            medias.push(newMedia)
+            await writeMedia(medias)
+            response.status(201).send({imdbID:newMedia.imdbID})
         }
     
       }catch(error){

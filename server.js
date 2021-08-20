@@ -23,6 +23,7 @@ const setCorsConfig = {
 
 //Global Middleware
 server.use(cors(setCorsConfig))
+server.use(express.json())
 
 // *************** ROUTES *****************
 server.use("/media", mediaRouter)
