@@ -62,17 +62,38 @@ mediaRouter.put("/:id",mediaValidations, async(request,response,next)=>{
             
         }else{
             const medias=await getMedias()
-            const remainingMedias=medias.filter(m =>m.id !== request.params.id)
-            const currentMedia={... request.body, id:request.params.id}
-            remainingMedias.push(currentMedia)
-            await writeMedia(remainingMedias)
-            response.status(202).send(currentMedia)
+            const media=medias.find(m=>m.imdbID===request.params.id)
+            if(!media){
+                next(createHttpError(404), { message: `Media requested with ${request.params.imdbID} is not found` })
+            }else{
+                const remainingMedias=medias.filter(m =>m.imdbID !== request.params.id)
+                const currentMedia={... request.body, imdbID:request.params.id}
+                remainingMedias.push(currentMedia)
+                await writeMedia(remainingMedias)
+                response.status(202).send(currentMedia)
+            }
+           
         }
         
       }catch(error){
           next(error)
       }
 })
-mediaRouter.delete("/:id", (request,response,next)=>{})
+mediaRouter.delete("/:id",async (request,response,next)=>{
+    try{
+        const medias=await getMedias()
+        const media=medias.find(m=>m.imdbID===request.params.id)
+        if(!media){
+            next(createHttpError(404), { message: `Media requested with ${request.params.imdbID} is not found` })
+        }else{
+        const remainingMedias=medias.filter(m => m.imdbID !== request.params.id)
+        await writeMedia(remainingMedias)
+        response.status(204).send("Deleted Successfully!")
+        }
+       
+      }catch(error){
+          next(error)
+      }
+})
 
 export default mediaRouter
