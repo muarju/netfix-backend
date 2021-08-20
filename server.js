@@ -2,6 +2,7 @@ import express from 'express'
 import listEndpoints from 'express-list-endpoints'
 import cors from 'cors'
 import mediaRouter from './src/media/index.js'
+import {notFoundErrorHandler,forbiddenErrorHandler, badRequestErrorHandler,serverErrorHandler} from './errorHandler.js'
 
 
 const server = express()
@@ -26,6 +27,11 @@ server.use(cors(setCorsConfig))
 // *************** ROUTES *****************
 server.use("/media", mediaRouter)
 
+//error Middleware
+server.use(notFoundErrorHandler)
+server.use(badRequestErrorHandler)
+server.use(forbiddenErrorHandler)
+server.use(serverErrorHandler)
 
 console.table(listEndpoints(server))
 server.listen(port, ()=>{
