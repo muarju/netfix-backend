@@ -53,7 +53,26 @@ mediaRouter.post("/",mediaValidations, async (request,response,next)=>{
           console.log(error)
       }
 })
-mediaRouter.put("/:id", (request,response,next)=>{})
+mediaRouter.put("/:id",mediaValidations, async(request,response,next)=>{
+    try{
+        const errorList=validationResult(request)
+            
+        if(!errorList.isEmpty()){
+            next(createHttpError(400,{errorList}))
+            
+        }else{
+            const medias=await getMedias()
+            const remainingMedias=medias.filter(m =>m.id !== request.params.id)
+            const currentMedia={... request.body, id:request.params.id}
+            remainingMedias.push(currentMedia)
+            await writeMedia(remainingMedias)
+            response.status(202).send(currentMedia)
+        }
+        
+      }catch(error){
+          next(error)
+      }
+})
 mediaRouter.delete("/:id", (request,response,next)=>{})
 
 export default mediaRouter
